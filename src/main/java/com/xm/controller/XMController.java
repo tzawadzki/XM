@@ -1,6 +1,7 @@
 package com.xm.controller;
 
 import java.io.IOException;
+import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -27,6 +28,11 @@ public class XMController {
 	@RequestMapping(value = "/normalizedRanges", method = RequestMethod.GET)
 	public List<NormalizedRange> normalizedRanges() {
 		return priceService.normalizedRanges();
+	}
+
+	@RequestMapping(value = "/maxNormalizedRangeForDay", method = RequestMethod.GET)
+	public NormalizedRange maxNormalizedRangeForDay(@RequestParam(value = "date") LocalDate date) {
+		return priceService.maxNormalizedRangeForDay(date);
 	}
 
 	@RequestMapping(value = "/upload", method = RequestMethod.POST)

@@ -1,5 +1,7 @@
 package com.xm.entity;
 
+import static com.xm.configuration.XmConstants.PRICE_SCALE;
+
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
@@ -50,7 +52,7 @@ public class Tick {
 	@Column(name = "PRICE_DATE_TIME", nullable = false)
 	private LocalDateTime dateTime;
 
-	@Column(name = "PRICE", precision = 15, scale = 6, nullable = false)
+	@Column(name = "PRICE", precision = 15, scale = PRICE_SCALE, nullable = false)
 	private BigDecimal price;
 
 }

@@ -15,5 +15,6 @@ public class NormalizedRange {
 
     private String symbol;
 
-    private BigDecimal highestNormalizedRange;
+    // TODO can be changed to % for better user readability
+    private BigDecimal normalizedRange;
 }
