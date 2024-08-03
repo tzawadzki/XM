@@ -1,6 +1,7 @@
 package com.xm.controller;
 
 import java.io.IOException;
+import java.util.List;
 
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -8,7 +9,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.xm.dto.NormalizedRange;
 import com.xm.exception.XMException;
+import com.xm.service.PriceService;
 import com.xm.service.UploadService;
 
 import lombok.RequiredArgsConstructor;
@@ -19,10 +22,11 @@ import lombok.RequiredArgsConstructor;
 public class XMController {
 
 	private final UploadService uploadService;
+	private final PriceService priceService;
 
-	@RequestMapping(value = "/test", method = RequestMethod.GET)
-	public String test() {
-		return "OK";
+	@RequestMapping(value = "/normalizedRanges", method = RequestMethod.GET)
+	public List<NormalizedRange> normalizedRanges() {
+		return priceService.normalizedRanges();
 	}
 
 	@RequestMapping(value = "/upload", method = RequestMethod.POST)

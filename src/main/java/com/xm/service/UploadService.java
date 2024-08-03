@@ -17,9 +17,9 @@ import java.util.stream.Collectors;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
+import com.xm.entity.Symbol;
+import com.xm.entity.Tick;
 import com.xm.exception.XMException;
-import com.xm.model.Symbol;
-import com.xm.model.Tick;
 import com.xm.repository.PriceRepository;
 import com.xm.repository.SymbolRepository;
 

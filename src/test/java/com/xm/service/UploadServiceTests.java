@@ -29,6 +29,8 @@ class UploadServiceTests {
         uploadService.uploadFile(getClass().getClassLoader().getResourceAsStream("files/LTC_values.csv"));
         uploadService.uploadFile(getClass().getClassLoader().getResourceAsStream("files/XRP_values.csv"));
 
+        var all = priceRepository.findAll();
+
         assertThat(symbolRepository.count()).isEqualTo(5);
         assertThat(priceRepository.count()).isEqualTo(450);
     }
