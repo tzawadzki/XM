@@ -11,8 +11,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.xm.dto.Bar;
 import com.xm.dto.NormalizedRange;
 import com.xm.exception.XMException;
+import com.xm.service.BarService;
 import com.xm.service.PriceService;
 import com.xm.service.UploadService;
 
@@ -25,6 +27,7 @@ public class XMController {
 
 	private final UploadService uploadService;
 	private final PriceService priceService;
+	private final BarService barService;
 
 	/**
 	 * Endpoint that will return a descending sorted list of all the cryptos,
@@ -44,6 +47,15 @@ public class XMController {
 	@RequestMapping(value = "/maxNormalizedRangeForDay", method = RequestMethod.GET)
 	public NormalizedRange maxNormalizedRangeForDay(@RequestParam(value = "date") LocalDate date) {
 		return priceService.maxNormalizedRangeForDay(date);
+	}
+
+	/**
+	 * Endpoint that will return the oldest/newest/min/max values for a requested
+	 * crypto
+	 */
+	@RequestMapping(value = "/bar", method = RequestMethod.GET)
+	public Bar bar(@RequestParam(value = "symbol") String symbol) {
+		return barService.bar(symbol);
 	}
 
 	/**
@@ -67,18 +79,41 @@ public class XMController {
 	 * Endpoint that will return a descending sorted list of all the cryptos,
 	 * comparing the normalized range (i.e. (max-min)/min)
 	 * for a specific period of time
+	 * @param from
+	 * @param to
+	 * @return
 	 */
 	@RequestMapping(value = "/normalizedRangesBetween", method = RequestMethod.GET)
-	public List<NormalizedRange> normalizedRanges(@RequestParam(value = "from") LocalDateTime from, @RequestParam(value = "from") LocalDateTime to) {
+	public List<NormalizedRange> normalizedRanges(@RequestParam(value = "from") LocalDateTime from,
+																								@RequestParam(value = "to") LocalDateTime to) {
 		return priceService.normalizedRangesBetweenDates(from, to);
 	}
 
 	/**
 	 * Endpoint that will return the crypto with the highest normalized range for a
 	 * specific period of time
+	 * @param from
+	 * @param to
+	 * @return
 	 */
 	@RequestMapping(value = "/maxNormalizedRangeBetween", method = RequestMethod.GET)
-	public NormalizedRange maxNormalizedRangeBetween(@RequestParam(value = "from") LocalDateTime from, @RequestParam(value = "from") LocalDateTime to) {
+	public NormalizedRange maxNormalizedRangeBetween(@RequestParam(value = "from") LocalDateTime from,
+																									 @RequestParam(value = "to") LocalDateTime to) {
 		return priceService.maxNormalizedRangeBetween(from, to);
+	}
+
+	/**
+	 * Endpoint that will return the oldest/newest/min/max values for a requested
+	 * crypto between dates
+	 * @param symbol
+	 * @param from
+	 * @param to
+	 * @return
+	 */
+	@RequestMapping(value = "/bar", method = RequestMethod.GET)
+	public Bar bar(@RequestParam(value = "symbol") String symbol,
+								 @RequestParam(value = "from") LocalDateTime from,
+								 @RequestParam(value = "to") LocalDateTime to) {
+		return barService.bar(symbol, from, to);
 	}
 }

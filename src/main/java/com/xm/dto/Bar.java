@@ -1,7 +1,6 @@
 package com.xm.dto;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -15,10 +14,6 @@ import lombok.NoArgsConstructor;
 public class Bar {
 
     private String symbol;
-
-    private LocalDateTime openDateTime;
-
-    private LocalDateTime closeDateTime;
 
     private BigDecimal open;
 
