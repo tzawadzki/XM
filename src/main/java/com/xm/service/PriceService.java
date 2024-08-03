@@ -31,10 +31,14 @@ public class PriceService {
     public NormalizedRange maxNormalizedRangeForDay(LocalDate localDate) {
         var from = localDate.atStartOfDay();
         var to = from.plusDays(1L);
+        return maxNormalizedRangeBetween(from, to);
+    }
+
+    public NormalizedRange maxNormalizedRangeBetween(LocalDateTime from, LocalDateTime to) {
         return normalizedRangesBetweenDates(from, to)
                 .stream()
                 .findFirst()
-                .orElseThrow(() -> new XMException("No values for date: " + localDate));
+                .orElseThrow(() -> new XMException("No values between: " + from + " and " + to));
     }
 
     public List<NormalizedRange> normalizedRangesBetweenDates(LocalDateTime from, LocalDateTime to) {
