@@ -1,0 +1,20 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+    name: spring-boot-k8s-xm
+spec:
+    selector:
+        matchLabels:
+            app: spring-boot-k8s-xm
+    replicas: 2
+    template:
+        metadata:
+            labels:
+                app: spring-boot-k8s-xm
+        spec:
+            containers:
+                -   name: spring-boot-k8s-xm
+                    image: springboot-k8s-xm:1.0.0
+                    imagePullPolicy: IfNotPresent
+                    ports:
+                        -   containerPort: 8090
