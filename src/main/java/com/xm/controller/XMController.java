@@ -18,6 +18,7 @@ import com.xm.service.BarService;
 import com.xm.service.PriceService;
 import com.xm.service.UploadService;
 
+import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
@@ -29,40 +30,47 @@ public class XMController {
 	private final PriceService priceService;
 	private final BarService barService;
 
-	/**
-	 * Endpoint that will return a descending sorted list of all the cryptos,
-	 * comparing the normalized range (i.e. (max-min)/min)
-	 */
+	@Operation(summary = "Returns a descending sorted list of all the cryptos, comparing the normalized range (i.e. (max-min)/min)")
 	@RequestMapping(value = "/normalizedRanges", method = RequestMethod.GET)
 	public List<NormalizedRange> normalizedRanges() {
 		return priceService.normalizedRanges();
 	}
 
-	/**
-	 * Endpoint that will return the crypto with the highest normalized range for a
-	 * specific day
-	 * @param date
-	 * @return
-	 */
-	@RequestMapping(value = "/maxNormalizedRangeForDay", method = RequestMethod.GET)
+	@Operation(summary = "Returns a descending sorted list of all the cryptos, comparing the normalized range (i.e. (max-min)/min) for a specific period of time")
+	@RequestMapping(value = "/normalizedRanges/betweenDates", method = RequestMethod.GET)
+	public List<NormalizedRange> normalizedRangesBetweenDates(@RequestParam(value = "from") LocalDateTime from,
+																														@RequestParam(value = "to") LocalDateTime to) {
+		return priceService.normalizedRangesBetweenDates(from, to);
+	}
+
+	@Operation(summary = "Returns the crypto with the highest normalized range for a specific day")
+	@RequestMapping(value = "/maxNormalizedRange/day", method = RequestMethod.GET)
 	public NormalizedRange maxNormalizedRangeForDay(@RequestParam(value = "date") LocalDate date) {
 		return priceService.maxNormalizedRangeForDay(date);
 	}
 
-	/**
-	 * Endpoint that will return the oldest/newest/min/max values for a requested
-	 * crypto
-	 */
-	@RequestMapping(value = "/bar", method = RequestMethod.GET)
+	@Operation(summary = "Returns the crypto with the highest normalized range for a specific period of time")
+	@RequestMapping(value = "/maxNormalizedRange/betweenDates", method = RequestMethod.GET)
+	public NormalizedRange maxNormalizedRangeBetween(@RequestParam(value = "from") LocalDateTime from,
+																									 @RequestParam(value = "to") LocalDateTime to) {
+		return priceService.maxNormalizedRangeBetween(from, to);
+	}
+
+	@Operation(summary = "Returns the oldest/newest/min/max values for a requested crypto")
+	@RequestMapping(value = "/ohlc", method = RequestMethod.GET)
 	public Bar bar(@RequestParam(value = "symbol") String symbol) {
 		return barService.bar(symbol);
 	}
 
-	/**
-	 * Uploads csv file with timestamp, symbol, column values
-	 * @param file
-	 * @return
-	 */
+	@Operation(summary = "Returns the oldest/newest/min/max values for a specific period of time")
+	@RequestMapping(value = "/ohlc/betweenDates", method = RequestMethod.GET)
+	public Bar bar(@RequestParam(value = "symbol") String symbol,
+								 @RequestParam(value = "from") LocalDateTime from,
+								 @RequestParam(value = "to") LocalDateTime to) {
+		return barService.bar(symbol, from, to);
+	}
+
+	@Operation(summary = "Uploads csv file with timestamp, symbol, column values")
 	@RequestMapping(value = "/upload", method = RequestMethod.POST)
 	public String uploadFiles(@RequestParam("file") MultipartFile file) {
       try {
@@ -73,47 +81,4 @@ public class XMController {
       return "OK";
 	}
 
-	// additional endpoints
-
-	/**
-	 * Endpoint that will return a descending sorted list of all the cryptos,
-	 * comparing the normalized range (i.e. (max-min)/min)
-	 * for a specific period of time
-	 * @param from
-	 * @param to
-	 * @return
-	 */
-	@RequestMapping(value = "/normalizedRangesBetween", method = RequestMethod.GET)
-	public List<NormalizedRange> normalizedRanges(@RequestParam(value = "from") LocalDateTime from,
-																								@RequestParam(value = "to") LocalDateTime to) {
-		return priceService.normalizedRangesBetweenDates(from, to);
-	}
-
-	/**
-	 * Endpoint that will return the crypto with the highest normalized range for a
-	 * specific period of time
-	 * @param from
-	 * @param to
-	 * @return
-	 */
-	@RequestMapping(value = "/maxNormalizedRangeBetween", method = RequestMethod.GET)
-	public NormalizedRange maxNormalizedRangeBetween(@RequestParam(value = "from") LocalDateTime from,
-																									 @RequestParam(value = "to") LocalDateTime to) {
-		return priceService.maxNormalizedRangeBetween(from, to);
-	}
-
-	/**
-	 * Endpoint that will return the oldest/newest/min/max values for a requested
-	 * crypto between dates
-	 * @param symbol
-	 * @param from
-	 * @param to
-	 * @return
-	 */
-	@RequestMapping(value = "/barBetweenDates", method = RequestMethod.GET)
-	public Bar bar(@RequestParam(value = "symbol") String symbol,
-								 @RequestParam(value = "from") LocalDateTime from,
-								 @RequestParam(value = "to") LocalDateTime to) {
-		return barService.bar(symbol, from, to);
-	}
 }
