@@ -6,6 +6,9 @@ server:
         include-exception: false
 
 spring:
+    data:
+        rest:
+            detection-strategy: annotated
     application:
         name: XM
     datasource:
