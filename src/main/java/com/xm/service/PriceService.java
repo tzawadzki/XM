@@ -53,7 +53,7 @@ public class PriceService {
                         .normalizedRange(normalize(symbolMinMax.min(), symbolMinMax.max()))
                         .build()
                 )
-                .sorted(Comparator.comparing(NormalizedRange::getNormalizedRange).reversed())
+                .sorted(Comparator.comparing(NormalizedRange::normalizedRange).reversed())
                 .toList();
     }
 

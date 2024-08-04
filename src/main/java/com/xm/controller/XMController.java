@@ -11,8 +11,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.xm.dto.Bar;
 import com.xm.dto.NormalizedRange;
+import com.xm.dto.SymbolOHLC;
 import com.xm.exception.XMException;
 import com.xm.service.BarService;
 import com.xm.service.PriceService;
@@ -58,15 +58,15 @@ public class XMController {
 
 	@Operation(summary = "Returns the oldest/newest/min/max values for a requested crypto")
 	@RequestMapping(value = "/ohlc", method = RequestMethod.GET)
-	public Bar bar(@RequestParam(value = "symbol") String symbol) {
+	public SymbolOHLC bar(@RequestParam(value = "symbol") String symbol) {
 		return barService.bar(symbol);
 	}
 
 	@Operation(summary = "Returns the oldest/newest/min/max values for a specific period of time")
 	@RequestMapping(value = "/ohlc/betweenDates", method = RequestMethod.GET)
-	public Bar bar(@RequestParam(value = "symbol") String symbol,
-								 @RequestParam(value = "from") LocalDateTime from,
-								 @RequestParam(value = "to") LocalDateTime to) {
+	public SymbolOHLC bar(@RequestParam(value = "symbol") String symbol,
+												@RequestParam(value = "from") LocalDateTime from,
+												@RequestParam(value = "to") LocalDateTime to) {
 		return barService.bar(symbol, from, to);
 	}
 
