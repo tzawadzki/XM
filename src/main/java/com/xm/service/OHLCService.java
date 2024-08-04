@@ -12,15 +12,15 @@ import lombok.AllArgsConstructor;
 
 @AllArgsConstructor
 @Service
-public class BarService {
+public class OHLCService {
 
     private final TickRepository tickRepository;
 
-    public SymbolOHLC bar(String symbol) {
+    public SymbolOHLC getOHLC(String symbol) {
         return convert(symbol, tickRepository.findOHLCBySymbol(symbol));
     }
 
-    public SymbolOHLC bar(String symbol, LocalDateTime from, LocalDateTime to) {
+    public SymbolOHLC getOHLC(String symbol, LocalDateTime from, LocalDateTime to) {
         return convert(symbol, tickRepository.findOHLCBySymbolBetweenDates(symbol, from, to));
     }
 

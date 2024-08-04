@@ -14,7 +14,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.xm.dto.NormalizedRange;
 import com.xm.dto.SymbolOHLC;
 import com.xm.exception.XMException;
-import com.xm.service.BarService;
+import com.xm.service.OHLCService;
 import com.xm.service.PriceService;
 import com.xm.service.UploadService;
 
@@ -28,7 +28,7 @@ public class XMController {
 
 	private final UploadService uploadService;
 	private final PriceService priceService;
-	private final BarService barService;
+	private final OHLCService OHLCService;
 
 	@Operation(summary = "Returns a descending sorted list of all the cryptos, comparing the normalized range (i.e. (max-min)/min)")
 	@RequestMapping(value = "/normalizedRanges", method = RequestMethod.GET)
@@ -59,7 +59,7 @@ public class XMController {
 	@Operation(summary = "Returns the oldest/newest/min/max values for a requested crypto")
 	@RequestMapping(value = "/ohlc", method = RequestMethod.GET)
 	public SymbolOHLC bar(@RequestParam(value = "symbol") String symbol) {
-		return barService.bar(symbol);
+		return OHLCService.getOHLC(symbol);
 	}
 
 	@Operation(summary = "Returns the oldest/newest/min/max values for a specific period of time")
@@ -67,7 +67,7 @@ public class XMController {
 	public SymbolOHLC bar(@RequestParam(value = "symbol") String symbol,
 												@RequestParam(value = "from") LocalDateTime from,
 												@RequestParam(value = "to") LocalDateTime to) {
-		return barService.bar(symbol, from, to);
+		return OHLCService.getOHLC(symbol, from, to);
 	}
 
 	@Operation(summary = "Uploads csv file with timestamp, symbol, column values")

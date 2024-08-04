@@ -12,7 +12,6 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 
 import com.xm.dto.NormalizedRange;
-import com.xm.exception.XMException;
 import com.xm.repository.TickRepository;
 import com.xm.repository.helper.SymbolMinMax;
 
@@ -38,7 +37,7 @@ public class PriceService {
         return normalizedRangesBetweenDates(from, to)
                 .stream()
                 .findFirst()
-                .orElseThrow(() -> new XMException("No values between: " + from + " and " + to));
+                .orElse(null);
     }
 
     public List<NormalizedRange> normalizedRangesBetweenDates(LocalDateTime from, LocalDateTime to) {

@@ -21,7 +21,7 @@ public interface TickRepository extends JpaRepository<Tick, Long> {
      * @param from inclusive
      * @param to exclusive
      */
-    @Query("SELECT new com.xm.repository.helper.SymbolMinMax(t.symbol.name, MIN(t.price), MAX(t.price)) FROM Tick AS t WHERE :from >= t.dateTime AND t.dateTime < :to GROUP BY t.symbol")
+    @Query("SELECT new com.xm.repository.helper.SymbolMinMax(t.symbol.name, MIN(t.price), MAX(t.price)) FROM Tick AS t WHERE t.dateTime >= :from AND t.dateTime < :to GROUP BY t.symbol")
     List<SymbolMinMax> findSymbolMinMaxBetweenDates(LocalDateTime from, LocalDateTime to);
 
     @Query("SELECT new com.xm.repository.helper.OpenHighLowClose("
@@ -33,10 +33,10 @@ public interface TickRepository extends JpaRepository<Tick, Long> {
     OpenHighLowClose findOHLCBySymbol(String symbol);
 
     @Query("SELECT new com.xm.repository.helper.OpenHighLowClose("
-            + "(SELECT to.price from Tick to WHERE to.symbol.name = :symbol AND :from >= to.dateTime AND to.dateTime < :to ORDER BY to.dateTime LIMIT 1), "
+            + "(SELECT to.price from Tick to WHERE to.symbol.name = :symbol AND to.dateTime >= :from AND to.dateTime < :to ORDER BY to.dateTime LIMIT 1), "
             + "MAX(t.price), "
             + "MIN(t.price), "
-            + "(SELECT tc.price from Tick tc WHERE tc.symbol.name = :symbol AND :from >= tc.dateTime AND tc.dateTime < :to ORDER BY tc.dateTime DESC LIMIT 1)) "
-            + "FROM Tick AS t WHERE t.symbol.name = :symbol AND :from >= t.dateTime AND t.dateTime < :to")
+            + "(SELECT tc.price from Tick tc WHERE tc.symbol.name = :symbol AND tc.dateTime >= :from AND tc.dateTime < :to ORDER BY tc.dateTime DESC LIMIT 1)) "
+            + "FROM Tick AS t WHERE t.symbol.name = :symbol AND t.dateTime >= :from AND t.dateTime < :to")
     OpenHighLowClose findOHLCBySymbolBetweenDates(String symbol, LocalDateTime from, LocalDateTime to);
 }

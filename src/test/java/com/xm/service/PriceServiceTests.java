@@ -7,8 +7,10 @@ import static com.xm.service.TestUtils.FILE_LTC;
 import static com.xm.service.TestUtils.FILE_XRP;
 import static com.xm.service.TestUtils.getFileInputStream;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,49 +18,46 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.annotation.DirtiesContext.ClassMode;
 
-import com.xm.entity.CryptoNotAllowed;
-import com.xm.exception.XMException;
-import com.xm.repository.CryptoNotAllowedRepository;
-import com.xm.repository.SymbolRepository;
-import com.xm.repository.TickRepository;
+import com.xm.configuration.XmConstants;
 
 @SpringBootTest
 @DirtiesContext(classMode = ClassMode.BEFORE_EACH_TEST_METHOD)
-class UploadServiceTests {
+class PriceServiceTests {
+
+    @Autowired
+    private OHLCService ohlcService;
+
+    @Autowired
+    private PriceService priceService;
 
     @Autowired
     private UploadService uploadService;
 
-    @Autowired
-    private SymbolRepository symbolRepository;
-
-    @Autowired
-    private TickRepository tickRepository;
-
-    @Autowired
-    private CryptoNotAllowedRepository cryptoNotAllowedRepository;
-
     @Test
-    void testUpload() {
+    void testMaxNormalizedRangeForDayNotInRange() {
         uploadService.uploadFile(getFileInputStream(FILE_BTC));
         uploadService.uploadFile(getFileInputStream(FILE_DOGE));
         uploadService.uploadFile(getFileInputStream(FILE_ETH));
         uploadService.uploadFile(getFileInputStream(FILE_LTC));
         uploadService.uploadFile(getFileInputStream(FILE_XRP));
 
-        assertThat(symbolRepository.count()).isEqualTo(5);
-        assertThat(tickRepository.count()).isEqualTo(450);
+        var ohlc = priceService.maxNormalizedRangeForDay(LocalDate.parse("2030-01-02"));
+
+        assertThat(ohlc).isNull();
     }
 
+    // TODO add more tests cases
     @Test
-    void testNotAllowed() {
-        cryptoNotAllowedRepository.save(CryptoNotAllowed.builder().name("BTC").build());
+    void testOHLCBetweenDates() {
+        uploadService.uploadFile(getFileInputStream(FILE_BTC));
 
-        Exception exception = assertThrows(XMException.class, () -> {
-            uploadService.uploadFile(getFileInputStream(FILE_BTC));
-        });
+        var ohlc = ohlcService.getOHLC("BTC", LocalDateTime.parse("2022-01-01T04:00"), LocalDateTime.parse("2022-01-01T07:00"));
 
-        assertTrue(exception.getMessage().contains("Crypto not allowed: BTC"));
+        assertThat(ohlc).isNotNull();
+        assertThat(ohlc.open()).isEqualTo(new BigDecimal("46813.210000").setScale(XmConstants.PRICE_SCALE));
+        assertThat(ohlc.high()).isEqualTo(new BigDecimal("46813.210000").setScale(XmConstants.PRICE_SCALE));
+        assertThat(ohlc.low()).isEqualTo(new BigDecimal("46813.210000").setScale(XmConstants.PRICE_SCALE));
+        assertThat(ohlc.close()).isEqualTo(new BigDecimal("46813.210000").setScale(XmConstants.PRICE_SCALE));
     }
 
     // TODO add more test with uploading same file, inconsistent data, changed columns etc
