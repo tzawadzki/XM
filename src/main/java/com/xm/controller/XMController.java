@@ -110,7 +110,7 @@ public class XMController {
 	 * @param to
 	 * @return
 	 */
-	@RequestMapping(value = "/bar", method = RequestMethod.GET)
+	@RequestMapping(value = "/barBetweenDates", method = RequestMethod.GET)
 	public Bar bar(@RequestParam(value = "symbol") String symbol,
 								 @RequestParam(value = "from") LocalDateTime from,
 								 @RequestParam(value = "to") LocalDateTime to) {

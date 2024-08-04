@@ -1,5 +1,10 @@
 server:
     port: 8090
+    error:
+        include-message: always
+        include-binding-errors: always
+        include-exception: false
+
 spring:
     application:
         name: XM
@@ -17,9 +22,11 @@ spring:
         multipart:
             max-file-size: 1MB # protection for not uploading too big files and kill service
             max-request-size: 1MB
-#    mvc:
-#      servlet:
-#        mvc:
-#            format:
-#                date-time: iso
+logging:
+    level:
+        org:
+            zalando:
+                logbook:
+                    Logbook: TRACE
+
 
