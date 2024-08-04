@@ -12,13 +12,11 @@ spring:
     application:
         name: XM
     datasource:
-        url: jdbc:postgresql://localhost:55000/xm
-        username: postgres
-        password: postgrespw
+        url: jdbc:h2:mem:test
     jpa:
         properties:
             hibernate:
-                dialect: org.hibernate.dialect.PostgreSQLDialect
+                dialect: org.hibernate.dialect.H2Dialect
                 hbm2ddl:
                     auto: update # Hibernate ddl auto (create, create-drop, validate, update)
     servlet:

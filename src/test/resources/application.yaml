@@ -11,7 +11,3 @@ spring:
                 dialect: org.hibernate.dialect.H2Dialect
                 hbm2ddl:
                     auto: update # Hibernate ddl auto (create, create-drop, validate, update)
-    servlet:
-        multipart:
-            max-file-size: 1MB # protection for not uploading too big files and kill service
-            max-request-size: 1MB
