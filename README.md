@@ -20,12 +20,10 @@ Swagger: http://localhost:8090/swagger-ui/index.html#/
 
 ## TODO (because lack of time)
 
+* configure NGINX in kubernetes to filter IP addresses
+* configure database in kubernetes PostgreSQL or MySQL
 * more cases in tests, junit tests
 * validation of uploaded file consistency
 * adjust Spring Rest Data configuration or add endpoints manually to manage not allowed crypto list
 * adjust documentation
-
-## TODO in future
-
-* add https
-* 
+* configure https
