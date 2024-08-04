@@ -20,8 +20,9 @@ import org.springframework.stereotype.Service;
 import com.xm.entity.Symbol;
 import com.xm.entity.Tick;
 import com.xm.exception.XMException;
-import com.xm.repository.PriceRepository;
+import com.xm.repository.CryptoNotAllowedRepository;
 import com.xm.repository.SymbolRepository;
+import com.xm.repository.TickRepository;
 
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
@@ -32,8 +33,9 @@ import lombok.AllArgsConstructor;
 public class UploadService {
 
     private static final String COLUMN_SEPARATOR = ",";
-    private final PriceRepository priceRepository;
+    private final TickRepository tickRepository;
     private final SymbolRepository symbolRepository;
+    private final CryptoNotAllowedRepository cryptoNotAllowedRepository;
 
     record FileEntry(String timestamp, String symbol, String price) {
     }
@@ -49,12 +51,17 @@ public class UploadService {
         var nameToSymbol = fileEntries.stream()
                 .map(FileEntry::symbol)
                 .distinct()
+                .peek(symbol -> {
+                    if (cryptoNotAllowedRepository.findByName(symbol) != null) {
+                        throw new XMException("Crypto not allowed: " + symbol);
+                    }
+                })
                 .map(symbol -> Optional.ofNullable(symbolRepository.findByName(symbol))
                         .orElse(symbolRepository.save(Symbol.builder().name(symbol).build())))
                 .collect(Collectors.toMap(Symbol::getName, Function.identity()));
 
         fileEntries.stream()
-                .forEach(fileEntry -> priceRepository.save(
+                .forEach(fileEntry -> tickRepository.save(
                         Tick.builder()
                         .symbol(nameToSymbol.get(fileEntry.symbol()))
                         .dateTime(convertTimestamp(fileEntry.timestamp()))

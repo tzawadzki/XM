@@ -6,8 +6,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import com.xm.repository.PriceRepository;
 import com.xm.repository.SymbolRepository;
+import com.xm.repository.TickRepository;
 
 @SpringBootTest
 class UploadServiceTests {
@@ -19,7 +19,7 @@ class UploadServiceTests {
     private SymbolRepository symbolRepository;
 
     @Autowired
-    private PriceRepository priceRepository;
+    private TickRepository tickRepository;
 
     @Test
     void testUpload() {
@@ -30,7 +30,7 @@ class UploadServiceTests {
         uploadService.uploadFile(getClass().getClassLoader().getResourceAsStream("files/XRP_values.csv"));
 
         assertThat(symbolRepository.count()).isEqualTo(5);
-        assertThat(priceRepository.count()).isEqualTo(450);
+        assertThat(tickRepository.count()).isEqualTo(450);
     }
 
     // TODO add more test with uploading same file, inconsistent data, changed columns etc

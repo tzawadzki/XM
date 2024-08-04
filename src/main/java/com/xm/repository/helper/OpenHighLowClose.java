@@ -1,4 +1,4 @@
-package com.xm.repository.model;
+package com.xm.repository.helper;
 
 import java.math.BigDecimal;
 

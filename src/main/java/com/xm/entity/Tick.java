@@ -33,12 +33,12 @@ import lombok.NoArgsConstructor;
 public class Tick {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "SEQ_BAR")
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "SEQ_TICK")
 	@GenericGenerator(
-			name = "SEQ_PRICE",
+			name = "SEQ_TICK",
 			strategy = "org.hibernate.id.enhanced.SequenceStyleGenerator",
 			parameters = {
-					@Parameter(name = "sequence_name", value = "SEQ_PRICE"),
+					@Parameter(name = "sequence_name", value = "SEQ_TICK"),
 					@Parameter(name = "increment_size", value = "1")
 			})
 	@Column(name = "ID")

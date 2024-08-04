@@ -13,8 +13,8 @@ import org.springframework.stereotype.Service;
 
 import com.xm.dto.NormalizedRange;
 import com.xm.exception.XMException;
-import com.xm.repository.PriceRepository;
-import com.xm.repository.model.SymbolMinMax;
+import com.xm.repository.TickRepository;
+import com.xm.repository.helper.SymbolMinMax;
 
 import lombok.AllArgsConstructor;
 
@@ -22,10 +22,10 @@ import lombok.AllArgsConstructor;
 @Service
 public class PriceService {
 
-    private final PriceRepository priceRepository;
+    private final TickRepository tickRepository;
 
     public List<NormalizedRange> normalizedRanges() {
-        return convert(priceRepository.findSymbolMinMax());
+        return convert(tickRepository.findSymbolMinMax());
     }
 
     public NormalizedRange maxNormalizedRangeForDay(LocalDate localDate) {
@@ -42,7 +42,7 @@ public class PriceService {
     }
 
     public List<NormalizedRange> normalizedRangesBetweenDates(LocalDateTime from, LocalDateTime to) {
-        return convert(priceRepository.findSymbolMinMaxBetweenDates(from, to));
+        return convert(tickRepository.findSymbolMinMaxBetweenDates(from, to));
     }
 
     public List<NormalizedRange> convert(List<SymbolMinMax> symbolMinMaxList) {
